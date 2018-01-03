@@ -2,6 +2,8 @@
 require_once __DIR__ .'/vendor/autoload.php';
 require __DIR__ . '/functions.php';
 
+define('TABLE_NAME_CONVERSATIONS', 'conversations');
+
 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(getenv('CHANNEL_ACCESS_TOKEN'));
 
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => getenv('CHANNEL_SECRET')]);
@@ -31,19 +33,17 @@ foreach ($events as $event) {
     continue;
   }
 
-  define('TABLE_NAME_CONVERSATIONS', 'conversations');
-  
-  $data = array('input' => array('text' =>  $event->getText()));
+  $data = array('input' => array("text" =>  $event->getText()));
   
   // 前回までの会話がデータベースに保存されていれば
   if(getLastConversationData($event->getUserId()) !== PDO::PARAM_NULL) {
     $lastConversationData = getLastConversationData($event->getUserId());
     
     // 前回までの会話のデータをパラメータに追加
-    $data['context'] = array('conversation_id' => $lastConversationData['conversation_id'], 
-        'system' => array('dialog_stack' => array(array('dialog_node' => $lastConversationData['dialog_node'])),
-        'dialog_turn_counter' => 1,
-        'dialog_request_counter' => 1
+    $data["context"] = array("conversation_id" => $lastConversationData["conversation_id"], 
+        "system" => array("dialog_stack" => array(array("dialog_node" => $lastConversationData["dialog_node"])),
+        "dialog_turn_counter" => 1,
+        "dialog_request_counter" => 1
         ));
   }
   
@@ -75,8 +75,8 @@ foreach ($events as $event) {
   $json = json_decode($jsonString, TRUE);        // デコードすると連想配列になる
   
   // 会話データを取得
-  $conversationId = $json['context']['conversation_id'];
-  $dialogNode= $json['context']['system']['dialog_stack'][0]['dialog_node'];
+  $conversationId = $json["context"]["conversation_id"];
+  $dialogNode = $json["context"]["system"]["dialog_stack"][0]["dialog_node"];
   
   // データベースに保存
   $conversationData = array('conversation_id' => $conversationId, 'dialog_node' => $dialogNode);
@@ -140,7 +140,7 @@ class dbConnection {
       self::$db = new PDO($dsn, $url['user'], $url['pass']);
       // エラー時例外を投げるように設定
       self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (Exception $ex) {
+    } catch (PDOException $ex) {
       echo 'Connection Error: ' . $ex->getMessage();
     }
   }
