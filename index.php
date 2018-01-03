@@ -33,7 +33,7 @@ foreach ($events as $event) {
     continue;
   }
 
-  $data = array('input' => array("text" =>  $event->getText()));
+  $data = array('input' => array("text" => $event->getText()));
   
   // 前回までの会話がデータベースに保存されていれば
   if(getLastConversationData($event->getUserId()) !== PDO::PARAM_NULL) {
