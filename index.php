@@ -103,7 +103,7 @@ function setLastConversationData($userId, $lastConversationData) {
     $sth->execute(array($conversationId, $dialogNode, $userId));
   } else {
     $dbh = dbConnection::getConnection();
-    $sql = 'update ' . TABLE_NAME_CONVERSATIONS . ' set conversation_id = ?, dialog_node = ? where ? = pgp_sym_encrypt(userid, \'' . getenv('DB_ENCRYPT_PASS') . '\')';
+    $sql = 'update ' . TABLE_NAME_CONVERSATIONS . ' set conversation_id = ?, dialog_node = ? where ? = pgp_sym_decrypt(userid, \'' . getenv('DB_ENCRYPT_PASS') . '\')';
     $sth = $dbh->prepare($sql);
     $sth->execute(array($conversationId, $dialogNode, $userId));
   }
@@ -119,7 +119,7 @@ function getLastConversationData($userId) {
   if (!($row = $sth->fetch())) {
     return PDO::PARAM_NULL;
   } else {
-    return array('conversation_id' => $row['conversation_id'], $row['dialog_id']);
+    return array('conversation_id' => $row['conversation_id'], 'dialog_node' => $row['dialog_id']);
   }
 }
 
