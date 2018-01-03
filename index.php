@@ -113,13 +113,13 @@ function setLastConversationData($userId, $lastConversationData) {
 // データベースから会話データを取得
 function getLastConversationData($userId) {
   $dbh = dbConnection::getConnection();
-  $sql ='select conversation_id, dialog_node from ' . TABLE_NAME_CONVERSATIONS . ' where ? = pgp_sym_decrypt(userid, \'' . getenv('DB_ENCRYPT_PASS') . '\')';
+  $sql = 'select conversation_id, dialog_node from ' . TABLE_NAME_CONVERSATIONS . ' where ? = pgp_sym_decrypt(userid, \'' . getenv('DB_ENCRYPT_PASS') . '\')';
   $sth = $dbh->prepare($sql);
   $sth->execute(array($userId));
   if (!($row = $sth->fetch())) {
     return PDO::PARAM_NULL;
   } else {
-    return array('conversation_id' => $row['conversation_id'], 'dialog_node' => $row['dialog_id']);
+    return array('conversation_id' => $row['conversation_id'], 'dialog_node' => $row['dialog_node']);
   }
 }
 
