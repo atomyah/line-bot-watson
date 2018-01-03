@@ -72,7 +72,7 @@ foreach ($events as $event) {
   // セッションを実行し結果を取得
   $jsonString = curl_exec($curl);
   //文字列を連想配列に変換
-  $json = json_decode($jasonString, TRUE);        // デコードすると連想配列になる
+  $json = json_decode($jsonString, TRUE);        // デコードすると連想配列になる
   
   // 会話データを取得
   $conversationId = $json['context']['conversation_id'];
