@@ -81,14 +81,14 @@ foreach ($events as $event) {
   // データベースに保存
   $conversationData = array('conversation_id' => $conversationId, 'dialog_node' => $dialogNode);
   //replyTextMessage($bot, $event->getReplyToken(), $conversationData['conversation_id'] . 'と' . $conversationData['dialog_node']);  
-  //replyTextMessage($bot, $event->getReplyToken(), json_encode(setLastConversationData($event->getUserId(), $conversationData)));
-  setLastConversationData($event->getUserId(), $conversationData);
+  replyTextMessage($bot, $event->getReplyToken(), json_encode(setLastConversationData($event->getUserId(), $conversationData)));
+
   
   // Conversationからの返答を取得
   $outputText = $json['output']['text'][count($json['output']['text']) - 1];
   
   //ユーザーに返信
-  replyTextMessage($bot, $event->getReplyToken(), $outputText);
+  //replyTextMessage($bot, $event->getReplyToken(), $outputText);
 
   
 }
@@ -99,8 +99,9 @@ function setLastConversationData($userId, $lastConversationData) {
   $conversationId = $lastConversationData['conversation_id'];
   $dialogNode = $lastConversationData['dialog_node'];
   
-  //$Arry = [$conversationId, $dialogNode]; return $Arry;
-
+  $Arry = [$conversationId, $dialogNode];
+  return $Arry;
+/*  
   if(getLastConversationData($userId) === PDO::PARAM_NULL) {
     $dbh = dbConnection::getConnection();
     $sql = 'insert into ' . TABLE_NAME_CONVERSATIONS . ' (conversation_id, dialog_node, userid) values (?, ?, pgp_sym_encrypt(?, \'' . getenv('DB_ENCRYPT_PASS') . '\'))';
@@ -112,6 +113,8 @@ function setLastConversationData($userId, $lastConversationData) {
     $sth = $dbh->prepare($sql);
     $sth->execute(array($conversationId, $dialogNode, $userId));
   }
+ * 
+ */
 }
 
 
