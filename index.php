@@ -94,9 +94,9 @@ foreach ($events as $event) {
 
 
 // 会話データをデータベースに保存
-function setLastConversationData($userId, $conversationData) {
-  $conversationId = $conversationData['conversation_id'];
-  $dialogNode = $conversationData['dialog_node'];
+function setLastConversationData($userId, $_conversationData) {
+  $conversationId = $_conversationData['conversation_id'];
+  $dialogNode = $_conversationData['dialog_node'];
   
   if(getLastConversationData($userId) === PDO::PARAM_NULL) {
     $dbh = dbConnection::getConnection();
