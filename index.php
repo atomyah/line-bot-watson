@@ -94,10 +94,11 @@ foreach ($events as $event) {
 
 
 // 会話データをデータベースに保存
-function setLastConversationData($userId, $_conversationData) {
-  $conversationId = $_conversationData['conversation_id'];
-  $dialogNode = $_conversationData['dialog_node'];
-  
+function setLastConversationData($userId, $lastConversationData) {
+  $conversationId = $lastConversationData['conversation_id'];
+  $dialogNode = $lastConversationData['dialog_node'];
+  replyTextMessage($bot, $event->getReplyToken(), $conversationId . 'と' . $dialogNode);
+/*  
   if(getLastConversationData($userId) === PDO::PARAM_NULL) {
     $dbh = dbConnection::getConnection();
     $sql = 'insert into ' . TABLE_NAME_CONVERSATIONS . ' (conversation_id, dialog_node, userid) values (?, ?, pgp_sym_encrypt(?, \'' . getenv('DB_ENCRYPT_PASS') . '\'))';
@@ -109,6 +110,8 @@ function setLastConversationData($userId, $_conversationData) {
     $sth = $dbh->prepare($sql);
     $sth->execute(array($conversationId, $dialogNode, $userId));
   }
+ * 
+ */
 }
 
 
