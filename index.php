@@ -81,7 +81,7 @@ foreach ($events as $event) {
   // データベースに保存
   $conversationData = array('conversation_id' => $conversationId, 'dialog_node' => $dialogNode);
 //  replyTextMessage($bot, $event->getReplyToken(), $conversationData['conversation_id'] . 'と' . $conversationData['dialog_node']);  
-  setConversationData($event->getUserId(), $conversationData);
+  setLastConversationData($event->getUserId(), $conversationData);
   
   // Conversationからの返答を取得
   $outputText = $json['output']['text'][count($json['output']['text']) - 1];
@@ -92,8 +92,9 @@ foreach ($events as $event) {
   
 }
 
-// 会話データをデータベースにインサート
-function setConversationData($userId, $ConversationData) {
+
+// 会話データをデータベースに保存
+function setLastConversationData($userId, $ConversationData) {
   $conversationId = $ConversationData['conversation_id'];
   $dialogNode = $ConversationData['dialog_node'];
   
@@ -102,21 +103,14 @@ function setConversationData($userId, $ConversationData) {
     $sql = 'insert into ' . TABLE_NAME_CONVERSATIONS . ' (conversation_id, dialog_node, userid) values (?, ?, pgp_sym_encrypt(?, \'' . getenv('DB_ENCRYPT_PASS') . '\'))';
     $sth = $dbh->prepare($sql);
     $sth->execute(array($conversationId, $dialogNode, $userId));
-  }
-}
-
-// 会話データをデータベースに更新
-function setLastConversationData($userId, $lastConversationData) {
-  $conversationId = $lastConversationData['conversation_id'];
-  $dialogNode = $lastConversationData['dialog_node'];
-  
-  if(getLastConversationData($userId) !== PDO::PARAM_NULL) {
+  } else {
     $dbh = dbConnection::getConnection();
     $sql = 'update ' . TABLE_NAME_CONVERSATIONS . ' set conversation_id = ?, dialog_node = ? where ? = pgp_sym_decrypt(userid, \'' . getenv('DB_ENCRYPT_PASS') . '\')';
     $sth = $dbh->prepare($sql);
     $sth->execute(array($conversationId, $dialogNode, $userId));
   }
 }
+
 
 // データベースから会話データを取得
 function getLastConversationData($userId) {
