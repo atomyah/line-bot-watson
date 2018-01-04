@@ -82,12 +82,13 @@ foreach ($events as $event) {
   $conversationData = array('conversation_id' => $conversationId, 'dialog_node' => $dialogNode);
 //  replyTextMessage($bot, $event->getReplyToken(), $conversationData['conversation_id'] . 'と' . $conversationData['dialog_node']);  
   setLastConversationData($event->getUserId(), $conversationData);
+  replyTextMessage($bot, $event->getReplyToken(), $Arry[0] . 'と' . $Arry[1]);
   
   // Conversationからの返答を取得
   $outputText = $json['output']['text'][count($json['output']['text']) - 1];
   
   //ユーザーに返信
-  replyTextMessage($bot, $event->getReplyToken(), $outputText);
+  //replyTextMessage($bot, $event->getReplyToken(), $outputText);
 
   
 }
@@ -97,7 +98,9 @@ foreach ($events as $event) {
 function setLastConversationData($userId, $lastConversationData) {
   $conversationId = $lastConversationData['conversation_id'];
   $dialogNode = $lastConversationData['dialog_node'];
-  replyTextMessage($bot, $event->getReplyToken(), $conversationId . 'と' . $dialogNode);
+  
+  $Arry = [$conversationId, $dialogNode];
+  return $Arry;
 /*  
   if(getLastConversationData($userId) === PDO::PARAM_NULL) {
     $dbh = dbConnection::getConnection();
