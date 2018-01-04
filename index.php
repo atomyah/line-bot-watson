@@ -81,7 +81,7 @@ foreach ($events as $event) {
   // データベースに保存
   $conversationData = array('conversation_id' => $conversationId, 'dialog_node' => $dialogNode);
 //  replyTextMessage($bot, $event->getReplyToken(), $conversationData['conversation_id'] . 'と' . $conversationData['dialog_node']);  
-//  setLastConversationData($event->getUserId(), $conversationData);
+  setLastConversationData($event->getUserId(), $conversationData);
   
   // Conversationからの返答を取得
   $outputText = $json['output']['text'][count($json['output']['text']) - 1];
